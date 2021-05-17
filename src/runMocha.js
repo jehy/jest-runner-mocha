@@ -158,6 +158,11 @@ async function runMocha({ config, testPath, globalConfig }) {
   }
 
   mocha.addFile(testPath);
+
+  if (globalConfig.testNamePattern) {
+    mocha.grep(globalConfig.testNamePattern);
+  }
+
   let runner;
   if (mochaOptions.ui) {
     runner = mocha.ui(mochaOptions.ui).run();

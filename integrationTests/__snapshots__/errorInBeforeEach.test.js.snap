@@ -5,7 +5,6 @@ exports[`Works when it has an error inside of beforeEach 1`] = `
 My tests
 ✓ This test passes
 Nested describe
-My tests
 ✕ \\"before each\\" hook for \\"This nested test passes\\"
 My tests Nested describe \\"before each\\" hook for \\"This nested test passes\\"
 Error: Error in nested beforeEach

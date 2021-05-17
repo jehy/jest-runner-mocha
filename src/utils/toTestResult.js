@@ -16,7 +16,7 @@ const getFailureMessage = (tests) => {
 
 const getAncestorTitle = (test) => {
   if (test.parent && test.parent.title) {
-    return [test.parent.title].concat(getAncestorTitle(test.parent));
+    return getAncestorTitle(test.parent).concat([test.parent.title]);
   }
 
   return [];

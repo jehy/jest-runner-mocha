@@ -20,7 +20,7 @@ function spawnPromise(program2, args, options) {
     });
 
     // eslint-disable-next-line no-unused-vars
-    ps.on('close', (code) => {
+    ps.on('close', () => {
       resolve({ stderr: stderr.join('\n'), stdout: stdout.join('\n') });
     });
   });
@@ -38,6 +38,10 @@ function normalize(output) {
     .replace(/ +\n/g, '\n')
     .replace(/\n+/g, '\n')
     .replace(/ +/g, ' ')
+  // replace √ on windows with same as used on unix
+    .replace(/√/g, '✓')
+  // replace ✕ on windows with same as used on unix
+    .replace(/×/g, '✕')
   // sometimes random spaces are being added to test output at the end, remove them
     .split('\n')
     .map(line => line.trim())
@@ -45,8 +49,8 @@ function normalize(output) {
 }
 function runJest(project, options = []) {
   const projects = path.join(__dirname, '__fixtures__', project);
+  const cmd = path.resolve('./node_modules/.bin/jest');
   const args = [
-    './node_modules/.bin/jest',
     '--useStderr',
     '--no-watchman',
     '--no-cache',
@@ -56,7 +60,7 @@ function runJest(project, options = []) {
     '--projects',
     `${projects}`,
   ].concat(options);
-  return spawnPromise('node', args, {
+  return spawnPromise(cmd, args, {
     // return exec(`node ./node_modules/.bin/jest ${args}`, {
     env: {
       ...process.env,
@@ -66,6 +70,7 @@ function runJest(project, options = []) {
       NODE_DISABLE_COLORS: 1,
       NO_COLOR: 1,
     },
+    shell: true,
   }).then(({ stdout, stderr }) => {
     return `${normalize(stderr)}\n${normalize(stdout)}`;
   });
